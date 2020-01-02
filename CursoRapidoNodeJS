@@ -1,0 +1,118 @@
+Curso Rápido NodeJS
+
+Instalação do NodeJS
+    Via gerenciador de pacotes - https://nodejs.org/en/download/package-manager/
+    Para o Linux foi necessário acessar - https://github.com/nodesource/distributions/blob/master/README.md
+    Código para Ubuntu -    # Using Ubuntu
+                            curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+                            sudo apt-get install -y nodejs
+    Problema em minha máquina corrigido com - https://askubuntu.com/questions/917603/sudo-apt-get-update-failing-could-not-open-list-file-due-to-permission-deni?rq=1
+
+Criando Estrutura
+    Criar pasta para o projeto
+    Criar o arquivo package.json para dependências - npm init -y
+    Instalação de pacote - npm install express
+    Abrir pasta do projeto no VSC
+    Criar arquivo principal - server.js (pode ter outro nome)
+    No arquivo principal digitar -  const express = require('express');
+                                    const app = express();
+                                    app.listen(3001);
+    Executar no terminal dentro do projeto - node server.json
+
+Criando Rota
+    Adicionar - app.get('/', (req, res) => {
+                  res.send('Hello Rocketseat');
+                })
+    Executar - node server.json
+
+Utilizando Nodemon
+  Nodemon realiza as alterações automaticas no servidor sempre que houver alterações nos códigos
+  Instalar nodemon como dependência de desenvolvimento  - npm install -D nodemon
+  devDependencies não são carregadas quando a aplicação e colocada em produção -D
+  Criar script dentro da tag script no package.json para executar o nodemon - "dev": "nodemon server.js"
+  Para executar a aplicação deverá ser usado - npm run dev
+
+Instalando MongoDB
+  Instalação via docker
+    Instalação do docker no Linux pode ser feito em - https://docs.docker.com/install/linux/docker-ce/ubuntu/
+    Colocar xenial no lugar de -  $(lsb_release -cs)
+    Código referenciado acima fica - sudo add-apt-repository \
+                                     "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+                                     xenial \
+                                     stable"
+    No terminal será possível usar o comando docker
+  Instalação do MongoDB
+    Baixar o container do MongoDB - docker pull mongo
+    Subir nova VM/container com a instalação rodando - docker run --name mongodb -p 27017:27017 -d mongo
+    --name = nome da máqunia
+    - p = redirecionamento de porta
+    - d = imagem que deseja utilizar
+
+  Retornar imagens que estão rodado - docker ps
+  Testar conexão - localhost:2701 ou utilizar o Robo3T
+  Ver máquinas pausadas - docker ps -a
+  Iniciar container se estiver parado - docker start <nome_container>
+
+Conectando Database
+  Instalar depêndencia para ORM - npm install mongoose
+  Adicionar - const mongoose = require('mongoose');
+              mongoose.connect('mongodb://localhost:27017/nodeapi', {useNewUrlParser: true});
+
+Criando Model de Produto
+  Criar estrutura src > models
+  Criar arquivo Product.js
+  Criar classe -  const mongoose = require('mongoose');
+                  const ProductSchema = new mongoose.Schema({
+                      title: {
+                          type: String,
+                          required: true,
+                      },
+                      description: {
+                          type: String,
+                          required: true,
+                      },
+                      url: {
+                          type: String,
+                          required: true,
+                      },
+                      createdAt: {
+                          type: Date,
+                          default: Date.now,
+                      },
+                  });
+
+                  mongoose.model('Product', ProductSchema);
+
+  Registrar o model na aplicação - require('./src/models/Product');
+  Resgistrar pasta de models (substitui o anterior) - npm install require-dir
+  Codificar as seguintes linha -  const requireDir = require('require-dir');
+                                  requireDir('./src/models');
+                                  const Product = mongoose.model("Product");
+  Adicionar produto como teste -  Product.create({
+                                      title: "React Native",
+                                      description: "Build native apps with React",
+                                      url: "http://github.com/facebook/react-native"
+                                  });
+
+Reestruturação de Arquivos
+  Reestruturação e inserção de responda a uma requisição.
+
+Utilizando o Insomnia
+  Software para testar as rotas da API.
+
+Criação de Registros
+  Criação da rota de adição de Registros
+
+CRUD
+  Criação das rotas que estão faltando
+
+Paginação da lista
+  Adicionar dependência - npm install mongoose-paginate
+  Codificar o Product.js e o ProductController.js
+
+Adicionando CORS
+  Permite o acesso da API por outros domínios
+  Os domínios podem ser filtrados
+  Adicione a dependência - npm install cors
+  Adicione no server as seguintes linhas -  const cors = require("cors");
+                                            app.use(cors());
